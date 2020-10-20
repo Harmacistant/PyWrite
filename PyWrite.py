@@ -74,7 +74,7 @@ class PyWrite:
         self.__root.title("PyWrite - [New Document]")
 
     def __ctrl(self, event):
-        print("Gotcha bitch!")
+        print("Still trying to figure out how control bindings work...")
         pass
 
     def __key(self, event):
