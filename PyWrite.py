@@ -1,4 +1,5 @@
-import os
+from platform import system as platform_sys
+import re
 from tkinter import *
 
 
@@ -6,12 +7,12 @@ class PyWrite:
     __root = Tk()
     __thisWidth = 500
     __thisHeight = 700
-    __thisTextArea = Text(__root)
+    __thisTextArea = Text(__root, font=('*Font', '17'))
     __thisScrollBar = Scrollbar(__thisTextArea)
     __thisStatusBar = Label(__root)
-    __appleMenuBar = Menu(__root)
-    __appleMenuBarDropDown = Menu(__appleMenuBar, name="apple")
-    __appleMenuBar.add_cascade(menu=__appleMenuBarDropDown)
+    __thisMenuBar = Menu(__root)
+    __thisAppMenu = Menu(__thisMenuBar, name='apple')
+    __thisMenuBar.add_cascade(menu=__thisAppMenu)
     __file = None
     __charCount = 0
 
@@ -63,8 +64,16 @@ class PyWrite:
         self.__thisScrollBar.config(command=self.__thisTextArea.yview)
         self.__thisTextArea.config(yscrollcommand=self.__thisScrollBar.set)
 
-        # Add Apple Menubar
-        # see https://tkdocs.com/tutorial/menus.html
+        if platform_sys() == 'Darwin':
+            # Add Apple Menubar
+            # see https://tkdocs.com/tutorial/menus.html
+            self.__root['menu'] = self.__thisMenuBar
+        elif platform_sys() == 'Linux':
+            # Linux Menu Options Here
+            pass
+        else:
+            # Presume Windows Options by Default
+            pass
 
         # Add Commands
         self.__thisTextArea.bind("<Key>", self.__key)
@@ -107,5 +116,5 @@ class PyWrite:
         self.__root.mainloop()
 
 
-pyWrite = PyWrite(width=600, height=800, fgcolor="green", bgcolor="black")
+pyWrite = PyWrite(width=800, height=800, fgcolor="green", bgcolor="black")
 pyWrite.run()
