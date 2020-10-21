@@ -5,13 +5,13 @@ from tkinter import *
 
 class PyWrite:
     __root = Tk()
-    __root.attributes("-fullscreen", True)
+    __root.attributes("-fullscreen", False)     # set to false for now until we can get a handle on
     __root.minsize(400, 400)
     __thisFullscreenState = False
     __thisWidth = 500
     __thisHeight = 700
     __thisTextArea = Text(__root,
-                          font=('*Font', '14'),
+                          font=('Courier New', '12'),     # Default font needs to be Courier New, 12 pt
                           padx=0,
                           pady=0,
                           borderwidth=0,
@@ -20,7 +20,7 @@ class PyWrite:
                           wrap=WORD)
     __thisScrollBar = Scrollbar(__thisTextArea)
     __thisStatusBar = Label(__root,
-                            font=('*Font', '14'),
+                            font=('Verdana', '8'),
                             padx=0,
                             pady=0,
                             borderwidth=0,
@@ -30,10 +30,34 @@ class PyWrite:
     __thisAppMenu = Menu(__thisMenuBar, name='apple')
     __thisMenuBar.add_cascade(menu=__thisAppMenu)
     __file = None
-    __charCount = 0
-    __charCountGoal = None
-    __wordCount = 0
-    __wordCountGoal = None
+    __stats = {
+        "characters": {
+            "re": r".",
+            "count": 0,
+            "goal": None
+        },
+        "lines": {
+            "re": r"[^\n\r\0]+",
+            "count": 0,
+            "goal": None
+        },
+        "paragraphs": {
+            "re": r"(\n|^)[^\n\r\0]+",
+            "count": 0,
+            "goal": None
+        },
+        "pages": {
+            "re": None,
+            "formula": None,
+            "count": 0,
+            "goal": None
+        },
+        "words": {
+            "re": r"\w+",
+            "count": 0,
+            "goal": None
+        }
+    }
 
     def __init__(self, **kwargs):
         # icon
@@ -44,16 +68,14 @@ class PyWrite:
 
         # Foreground and Background
         try:
-            self.__thisTextArea['background'] = kwargs['bgcolor']
-            self.__root['background'] = kwargs['bgcolor']
-            self.__thisStatusBar['background'] = kwargs['bgcolor']
-            if kwargs['bgcolor'] == "black":
-                self.__thisTextArea['insertbackground'] = 'white'
+            self.__thisTextArea['background'] = "#000000"
+            self.__root['background'] = "#000000"
+            self.__thisStatusBar['background'] = "#0f0f0f"
         except KeyError:
             pass
         try:
-            self.__thisTextArea['foreground'] = kwargs['fgcolor']
-            self.__thisStatusBar['foreground'] = kwargs['fgcolor']
+            self.__thisTextArea['foreground'] = "#d1a000"
+            self.__thisStatusBar['foreground'] = "#3f3f3f"
         except KeyError:
             pass
 
@@ -111,23 +133,24 @@ class PyWrite:
         return "break"
 
     def __ctrl(self, event=None):
+        # BIG OL TODO HERE:
+        # - how to capture special key combinations separately from the global key-capture of the textarea...
         print("Still trying to figure out how control bindings work...")
         pass
 
     def __key(self, event=None):
-        if event:
-            pass
-        allText = self.__thisTextArea.get("1.0", "end-1c")
-        self.__charCount = len(allText)
-        self.__wordCount = len(allText.strip().split(" "))
+        __text = self.__thisTextArea.get("1.0", END)
+        final_out = ""
+        for stat in [s for s in self.__stats if self.__stats[s]['re']]:
+            self.__stats[stat]['count'] = len(re.findall(self.__stats[stat]['re'], __text))
+            final_out = final_out + f"{stat.capitalize()}: {self.__stats[stat]['count']}"
+            if self.__stats[stat]['goal']:
+                final_out = final_out + f" / {self.__stats[stat]['goal']}"
+            final_out = final_out + "\t"
 
-        charCountLabel = f"{self.__charCount}" if not self.__charCountGoal \
-            else f"{self.__charCount} / {self.__charCountGoal}"
+        final_out.strip()
 
-        wordCountLabel = f"{self.__wordCount}" if not self.__wordCountGoal \
-            else f"{self.__wordCount} / {self.__wordCountGoal}"
-
-        self.__thisStatusBar['text'] = charCountLabel + "\t" + wordCountLabel
+        self.__thisStatusBar['text'] = final_out
 
     def __quit(self):
         self.__root.destroy()
@@ -154,5 +177,5 @@ class PyWrite:
         self.__root.mainloop()
 
 
-pyWrite = PyWrite(width=800, height=800, fgcolor="green", bgcolor="black")
+pyWrite = PyWrite(width=800, height=800)
 pyWrite.run()
