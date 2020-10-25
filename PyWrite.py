@@ -177,5 +177,6 @@ class PyWrite:
         self.__root.mainloop()
 
 
-pyWrite = PyWrite(width=800, height=800)
-pyWrite.run()
+if __name__ == "__main__":
+    pyWrite = PyWrite(width=800, height=800)
+    pyWrite.run()

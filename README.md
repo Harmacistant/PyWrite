@@ -5,7 +5,7 @@ A full screen python powered word processor
 A full screen, os-agnostic word processor written from the ground up in python.  That's really about it!
 
 #### Goals/To-Do
- - [ ] Full Screen
+ - [x] Full Screen
  - [ ] Live Text Statistics
  - [ ] Programmable Page and Paragraph Goals
  - [ ] Timer
@@ -17,5 +17,5 @@ A full screen, os-agnostic word processor written from the ground up in python. 
  - [ ] Completely Portable Install Option
  - [ ] Common Shortcut Support (Ctrl/Cmd+X, Ctrl/Cmd+V, etc)
  - [ ] Fully rebindable/customizable shortcuts
- - [ ] Pastebin integration
+ - [ ] Pastebin integration?
  
